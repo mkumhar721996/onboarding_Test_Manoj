@@ -1,0 +1,106 @@
+/* Layout & text primitives */
+
+.text-sm { font-size: var(--font-size-sm); font-family: var(--font-family-base); }
+.text-md { font-size: var(--font-size-md); font-family: var(--font-family-base); }
+.text-lg { font-size: var(--font-size-lg); font-family: var(--font-family-base); font-weight: var(--font-weight-semibold); }
+
+.stack-1 > * + * { margin-top: var(--space-1); }
+.stack-2 > * + * { margin-top: var(--space-2); }
+.stack-3 > * + * { margin-top: var(--space-3); }
+.stack-4 > * + * { margin-top: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-color: var(--button-primary-border);
+  border-radius: var(--button-primary-radius);
+  padding: var(--button-primary-padding) var(--space-4);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-radius: var(--button-secondary-radius);
+  padding: var(--button-secondary-padding) var(--space-4);
+}
+
+/* Card */
+
+.card {
+  background-color: var(--card-default-background);
+  border: 1px solid var(--card-default-border);
+  border-radius: var(--card-default-radius);
+  padding: var(--card-default-padding);
+  box-shadow: var(--shadow-card);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-fg);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  background-color: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border: 1px solid var(--chip-default-border);
+  border-radius: var(--chip-default-radius);
+  padding: var(--chip-default-padding) var(--space-2);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  background-color: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: 1px solid var(--input-default-border);
+  border-radius: var(--input-default-radius);
+  padding: var(--input-default-padding);
+}
+
+.input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.label {
+  display: block;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  margin-bottom: var(--space-1);
+}
