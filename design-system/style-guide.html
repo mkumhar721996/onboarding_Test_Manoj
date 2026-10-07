@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Design System Style Guide</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="prototype-utils.css">
+<style>
+  body {
+    font-family: var(--font-family-base);
+    color: var(--color-fg);
+    background: var(--color-bg);
+    margin: 0;
+    padding: var(--space-4);
+  }
+  section {
+    margin-bottom: calc(var(--space-4) * 3);
+  }
+  h1 {
+    font-size: calc(var(--font-size-lg) * 1.6);
+  }
+  h2 {
+    font-size: var(--font-size-lg);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-2);
+  }
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-4);
+  }
+  .swatch {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .swatch-fill {
+    height: 64px;
+  }
+  .swatch-label {
+    padding: var(--space-2);
+    font-size: var(--font-size-sm);
+  }
+  .swatch-label code {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-fg);
+  }
+  .dim-sample {
+    background: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+  }
+  .type-sample {
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+  .component-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-4);
+  }
+  .guidelines h3 {
+    font-size: var(--font-size-md);
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-1);
+  }
+  .guidelines p {
+    font-size: var(--font-size-md);
+    line-height: 1.5;
+    max-width: 70ch;
+  }
+</style>
+</head>
+<body>
+
+<h1>Design System Style Guide</h1>
+
+<section>
+  <h2>Color tokens</h2>
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="swatch-fill" style="background: var(--color-fg);"></div>
+      <div class="swatch-label"><code>color-fg</code><code>#1f2937</code></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-fill" style="background: var(--color-bg);"></div>
+      <div class="swatch-label"><code>color-bg</code><code>#ffffff</code></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-fill" style="background: var(--color-primary);"></div>
+      <div class="swatch-label"><code>color-primary</code><code>#2563eb</code></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-fill" style="background: var(--color-border);"></div>
+      <div class="swatch-label"><code>color-border</code><code>#d1d5db</code></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-fill" style="background: var(--color-surface-subtle);"></div>
+      <div class="swatch-label"><code>color-surface-subtle</code><code>#eef2ff</code></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Spacing tokens</h2>
+  <div class="row">
+    <div style="width: var(--space-1); height: var(--space-1);" class="dim-sample"></div>
+    <code>space-1 (4px)</code>
+  </div>
+  <div class="row">
+    <div style="width: var(--space-2); height: var(--space-2);" class="dim-sample"></div>
+    <code>space-2 (8px)</code>
+  </div>
+  <div class="row">
+    <div style="width: var(--space-3); height: var(--space-3);" class="dim-sample"></div>
+    <code>space-3 (12px)</code>
+  </div>
+  <div class="row">
+    <div style="width: var(--space-4); height: var(--space-4);" class="dim-sample"></div>
+    <code>space-4 (16px)</code>
+  </div>
+</section>
+
+<section>
+  <h2>Radius tokens</h2>
+  <div class="row">
+    <div style="width: 64px; height: 64px; border-radius: var(--radius-sm);" class="dim-sample"></div>
+    <code>radius-sm (4px)</code>
+  </div>
+  <div class="row">
+    <div style="width: 64px; height: 64px; border-radius: var(--radius-md);" class="dim-sample"></div>
+    <code>radius-md (8px)</code>
+  </div>
+  <div class="row">
+    <div style="width: 64px; height: 64px; border-radius: var(--radius-lg);" class="dim-sample"></div>
+    <code>radius-lg (16px)</code>
+  </div>
+</section>
+
+<section>
+  <h2>Type scale &amp; type tokens</h2>
+  <span class="type-sample" style="font-size: var(--font-size-sm);">font-size-sm (12px) — The quick brown fox</span>
+  <span class="type-sample" style="font-size: var(--font-size-md);">font-size-md (14px) — The quick brown fox</span>
+  <span class="type-sample" style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold);">font-size-lg (18px) — The quick brown fox</span>
+  <p>
+    <code>font-family-base</code>: <span style="font-family: var(--font-family-base);">Inter, system-ui, -apple-system, sans-serif</span><br>
+    <code>font-weight-regular</code>: <span style="font-weight: var(--font-weight-regular);">400 regular</span><br>
+    <code>font-weight-semibold</code>: <span style="font-weight: var(--font-weight-semibold);">600 semibold</span>
+  </p>
+</section>
+
+<section>
+  <h2>Shadow token</h2>
+  <div style="width: 160px; height: 80px; background: var(--color-bg); border-radius: var(--radius-md); box-shadow: var(--shadow-card);"></div>
+  <code>shadow-card</code>
+</section>
+
+<section>
+  <h2>Buttons</h2>
+  <div class="component-row">
+    <button class="btn btn-primary">Save changes</button>
+    <button class="btn btn-secondary">Cancel</button>
+  </div>
+</section>
+
+<section>
+  <h2>Card</h2>
+  <div class="card" style="max-width: 360px;">
+    <h3 class="card-title">Card title</h3>
+    <p class="card-body">Card body copy demonstrating the default card component built from card.default.* alias tokens.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Chip</h2>
+  <div class="component-row">
+    <span class="chip">Active</span>
+    <span class="chip">Draft</span>
+  </div>
+</section>
+
+<section>
+  <h2>Form controls</h2>
+  <div style="max-width: 320px;">
+    <label class="label" for="sample-input">Label</label>
+    <input class="input" id="sample-input" type="text" placeholder="Placeholder text">
+  </div>
+</section>
+
+<section class="guidelines">
+  <h2>UI guidelines</h2>
+
+  <h3>Navigation</h3>
+  <p>Use a persistent left sidebar (sections: Dashboard, Records, Settings) rather than a top bar,
+  because this is a data-oriented console where users jump between sections frequently and a
+  sidebar keeps that switch to one click. Do not add a second nav layer (tabs-within-sidebar);
+  nest deeper pages under their section in the URL instead, to keep orientation obvious.</p>
+
+  <h3>Layout and density</h3>
+  <p>Default to a dense layout (space-2/space-3 rhythm, font-size-sm/font-size-md body text)
+  because the primary users are repeat operators scanning many records, not first-time consumer
+  visitors. Reserve space-4 and font-size-lg for card titles and section headers only, so
+  density stays low-key rather than cramped. Design for a single desktop breakpoint (≥1024px)
+  first, since this product is used at a desk; collapse the sidebar to icons-only below that
+  width rather than building a full mobile layout, because mobile is not a primary use case.</p>
+
+  <h3>Component usage</h3>
+  <p>Use .card for a single entity's detail or a grouped settings panel, since a card implies one
+  cohesive unit a user reads top to bottom. Use a plain table (not cards-in-a-grid) for any list
+  of more than a handful of same-shaped records, because tables let users scan and compare
+  columns, which cards can't do at speed. Use .chip only for status/tag labels inline in text or
+  table cells, never as a clickable control, so chips stay visually distinct from buttons. Use
+  .btn-primary for exactly one action per screen (the one that commits a change) and
+  .btn-secondary for everything else, so the primary action stays findable at a glance.</p>
+
+  <h3>Theme</h3>
+  <p>Light theme only for now (color-bg/color-fg as defined in tokens), because the product has
+  one brand surface and no user-facing theme switch has been requested; revisit if a dark variant
+  is explicitly prioritized.</p>
+
+  <h3>Voice and tone</h3>
+  <p>Write copy in plain, direct, second person ("Add a record", not "Records may be added"), because
+  operators are mid-task and scanning, not reading prose. Prefer specific nouns over vague ones in
+  labels and errors ("No records match this filter" rather than "No data found"), so users can act
+  on what they read without guessing.</p>
+</section>
+
+</body>
+</html>

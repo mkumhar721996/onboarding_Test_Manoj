@@ -1,0 +1,49 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1f2937; /** Default body text color. Paired with color-bg at 14.7:1 contrast. */
+  --color-bg: #ffffff; /** Default page and surface background. */
+  --color-primary: #2563eb; /** Brand accent used for primary actions and focus states. */
+  --color-border: #d1d5db; /** Default hairline border for cards, inputs, and dividers. */
+  --color-surface-subtle: #eef2ff; /** Low-emphasis tinted background, e.g. chips and secondary buttons on hover. */
+  --space-1: 4px; /** Tightest spacing: icon-to-label gaps, chip padding. */
+  --space-2: 8px; /** Compact spacing: control internal padding, stack gaps in dense lists. */
+  --space-3: 12px; /** Default spacing: button padding, form field gaps. */
+  --space-4: 16px; /** Roomy spacing: card padding, section gaps. */
+  --radius-sm: 4px; /** Chips, inputs, small controls. */
+  --radius-md: 8px; /** Buttons and most interactive controls. */
+  --radius-lg: 16px; /** Cards and containers. */
+  --font-size-sm: 12px; /** Captions, chip labels, table metadata. */
+  --font-size-md: 14px; /** Default body and control text. */
+  --font-size-lg: 18px; /** Section headings and card titles. */
+  --font-family-base: Inter, system-ui, -apple-system, sans-serif; /** Default typeface across the product. */
+  --font-weight-regular: 400; /** Body text weight. */
+  --font-weight-semibold: 600; /** Headings, button labels, emphasis. */
+  --shadow-card: 0px 1px 3px 0px rgb(12.16% 16.08% 21.57% / 0.08); /** Resting elevation for cards. */
+  --button-primary-background: var(--color-primary); /** Primary button fill. */
+  --button-primary-foreground: var(--color-bg); /** Primary button label color. */
+  --button-primary-border: var(--color-primary); /** Primary button border. */
+  --button-primary-radius: var(--radius-md); /** Primary button corner radius. */
+  --button-primary-padding: var(--space-3); /** Primary button internal padding. */
+  --button-secondary-background: var(--color-bg); /** Secondary button fill. */
+  --button-secondary-foreground: var(--color-primary); /** Secondary button label color. */
+  --button-secondary-border: var(--color-border); /** Secondary button border. */
+  --button-secondary-radius: var(--radius-md); /** Secondary button corner radius. */
+  --button-secondary-padding: var(--space-3); /** Secondary button internal padding. */
+  --card-default-background: var(--color-bg); /** Card surface fill. */
+  --card-default-border: var(--color-border); /** Card hairline border. */
+  --card-default-radius: var(--radius-lg); /** Card corner radius. */
+  --card-default-padding: var(--space-4); /** Card internal padding. */
+  --chip-default-background: var(--color-surface-subtle); /** Chip fill. */
+  --chip-default-foreground: var(--color-primary); /** Chip label color. */
+  --chip-default-border: var(--color-border); /** Chip border. */
+  --chip-default-radius: var(--radius-sm); /** Chip corner radius. */
+  --chip-default-padding: var(--space-1); /** Chip internal padding. */
+  --input-default-background: var(--color-bg); /** Form control fill. */
+  --input-default-foreground: var(--color-fg); /** Form control text color. */
+  --input-default-border: var(--color-border); /** Form control border. */
+  --input-default-radius: var(--radius-sm); /** Form control corner radius. */
+  --input-default-padding: var(--space-2); /** Form control internal padding. */
+}
