@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<!--
+  ONBOARDING-TEST-MANOJ-STORY-011 — user_Test_Manoj
+  Standalone registration/login prototype ("Connectly"), styled after the brief's
+  description ("register and login on a facebook website") but implemented and
+  branded as its own independent product — see AC27: no real integration with or
+  calls to facebook.com. "Connectly" is an invented, unrelated brand name used only
+  so this prototype does not imply a connection to any real third-party site.
+
+  App nav: left sidebar (Dashboard · Records · Settings), per this project's UI
+  guidelines, for the authenticated "Account Home" screen only. Pre-authentication
+  screens (register, verify email, email confirmation, log in, forgot/reset
+  password, session expired) use a centered, chrome-free auth layout instead,
+  since the visitor isn't inside the product yet and a sidebar naming sections of
+  an app they can't reach would be disorienting.
+
+  Design system gap: the shared tokens.json has no semantic status colors
+  (error/success/warning) — only color-fg/bg/primary/border/surface-subtle. A
+  small greenfield :root block below proposes --color-danger(-bg) and
+  --color-success(-bg) for alert banners, field errors and status chips. Status
+  is never conveyed by color alone: every alert/field error also carries an
+  icon glyph (⚠ / ✓) and a text label, per WCAG guidance. Flagging the missing
+  tokens for design-system-bootstrap to formalize.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connectly — Register &amp; log in (prototype)</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1f2937; /** Default body text color. Paired with color-bg at 14.7:1 contrast. */
+  --color-bg: #ffffff; /** Default page and surface background. */
+  --color-primary: #2563eb; /** Brand accent used for primary actions and focus states. */
+  --color-border: #d1d5db; /** Default hairline border for cards, inputs, and dividers. */
+  --color-surface-subtle: #eef2ff; /** Low-emphasis tinted background, e.g. chips and secondary buttons on hover. */
+  --space-1: 4px; /** Tightest spacing: icon-to-label gaps, chip padding. */
+  --space-2: 8px; /** Compact spacing: control internal padding, stack gaps in dense lists. */
+  --space-3: 12px; /** Default spacing: button padding, form field gaps. */
+  --space-4: 16px; /** Roomy spacing: card padding, section gaps. */
+  --radius-sm: 4px; /** Chips, inputs, small controls. */
+  --radius-md: 8px; /** Buttons and most interactive controls. */
+  --radius-lg: 16px; /** Cards and containers. */
+  --font-size-sm: 12px; /** Captions, chip labels, table metadata. */
+  --font-size-md: 14px; /** Default body and control text. */
+  --font-size-lg: 18px; /** Section headings and card titles. */
+  --font-family-base: Inter, system-ui, -apple-system, sans-serif; /** Default typeface across the product. */
+  --font-weight-regular: 400; /** Body text weight. */
+  --font-weight-semibold: 600; /** Headings, button labels, emphasis. */
+  --shadow-card: 0px 1px 3px 0px rgb(12.16% 16.08% 21.57% / 0.08); /** Resting elevation for cards. */
+  --button-primary-background: var(--color-primary); /** Primary button fill. */
+  --button-primary-foreground: var(--color-bg); /** Primary button label color. */
+  --button-primary-border: var(--color-primary); /** Primary button border. */
+  --button-primary-radius: var(--radius-md); /** Primary button corner radius. */
+  --button-primary-padding: var(--space-3); /** Primary button internal padding. */
+  --button-secondary-background: var(--color-bg); /** Secondary button fill. */
+  --button-secondary-foreground: var(--color-primary); /** Secondary button label color. */
+  --button-secondary-border: var(--color-border); /** Secondary button border. */
+  --button-secondary-radius: var(--radius-md); /** Secondary button corner radius. */
+  --button-secondary-padding: var(--space-3); /** Secondary button internal padding. */
+  --card-default-background: var(--color-bg); /** Card surface fill. */
+  --card-default-border: var(--color-border); /** Card hairline border. */
+  --card-default-radius: var(--radius-lg); /** Card corner radius. */
+  --card-default-padding: var(--space-4); /** Card internal padding. */
+  --chip-default-background: var(--color-surface-subtle); /** Chip fill. */
+  --chip-default-foreground: var(--color-primary); /** Chip label color. */
+  --chip-default-border: var(--color-border); /** Chip border. */
+  --chip-default-radius: var(--radius-sm); /** Chip corner radius. */
+  --chip-default-padding: var(--space-1); /** Chip internal padding. */
+  --input-default-background: var(--color-bg); /** Form control fill. */
+  --input-default-foreground: var(--color-fg); /** Form control text color. */
+  --input-default-border: var(--color-border); /** Form control border. */
+  --input-default-radius: var(--radius-sm); /** Form control corner radius. */
+  --input-default-padding: var(--space-2); /** Form control internal padding. */
+}
+
+</style>
+<style>
+/* Layout & text primitives */
+
+.text-sm { font-size: var(--font-size-sm); font-family: var(--font-family-base); }
+.text-md { font-size: var(--font-size-md); font-family: var(--font-family-base); }
+.text-lg { font-size: var(--font-size-lg); font-family: var(--font-family-base); font-weight: var(--font-weight-semibold); }
+
+.stack-1 > * + * { margin-top: var(--space-1); }
+.stack-2 > * + * { margin-top: var(--space-2); }
+.stack-3 > * + * { margin-top: var(--space-3); }
+.stack-4 > * + * { margin-top: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-color: var(--button-primary-border);
+  border-radius: var(--button-primary-radius);
+  padding: var(--button-primary-padding) var(--space-4);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-radius: var(--button-secondary-radius);
+  padding: var(--button-secondary-padding) var(--space-4);
+}
+
+/* Card */
+
+.card {
+  background-color: var(--card-default-background);
+  border: 1px solid var(--card-default-border);
+  border-radius: var(--card-default-radius);
+  padding: var(--card-default-padding);
+  box-shadow: var(--shadow-card);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-fg);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  background-color: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border: 1px solid var(--chip-default-border);
+  border-radius: var(--chip-default-radius);
+  padding: var(--chip-default-padding) var(--space-2);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  background-color: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: 1px solid var(--input-default-border);
+  border-radius: var(--input-default-radius);
+  padding: var(--input-default-padding);
+}
+
+.input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.label {
+  display: block;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  margin-bottom: var(--space-1);
+}
+
+</style>
+<style>
+  /* ---- Proposed tokens (not yet in design system; see annotation above) ---- */
+  :root {
+    --color-danger-proposed: #b91c1c;
+    --color-danger-bg-proposed: #fef2f2;
+    --color-danger-border-proposed: #fecaca;
+    --color-success-proposed: #15803d;
+    --color-success-bg-proposed: #f0fdf4;
+    --color-success-border-proposed: #bbf7d0;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-family-base);
+    color: var(--color-fg);
+    background: var(--color-bg);
+  }
+  h1, h2, h3, p, ul { margin: 0; }
+  button { font-family: inherit; }
+  a { color: var(--color-primary); }
+
+  .hidden { display: none !important; }
+
+  /* ---- Auth (pre-authentication) shell ---- */
+  .auth-shell {
+    min-height: calc(100vh - 46px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: calc(var(--space-4) * 2) var(--space-4);
+    background: var(--color-surface-subtle);
+  }
+  .auth-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-fg);
+  }
+  .auth-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: var(--color-bg);
+    font-weight: var(--font-weight-semibold);
+  }
+  .auth-card {
+    width: 100%;
+    max-width: 420px;
+  }
+  .auth-card .card-title { margin-bottom: var(--space-1); }
+  .auth-subtitle {
+    font-size: var(--font-size-md);
+    color: var(--color-fg);
+    opacity: 0.75;
+    margin-bottom: var(--space-4);
+  }
+  .auth-footnote {
+    max-width: 420px;
+    text-align: center;
+    font-size: var(--font-size-sm);
+    color: var(--color-fg);
+    opacity: 0.65;
+    margin-top: var(--space-4);
+  }
+  .auth-switch {
+    text-align: center;
+    font-size: var(--font-size-md);
+    margin-top: var(--space-4);
+  }
+  .link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-primary);
+    font-size: inherit;
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .link-button:focus-visible,
+  .btn:focus-visible,
+  .input:focus-visible,
+  .sidebar-link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* ---- Forms ---- */
+  .field { margin-bottom: var(--space-3); }
+  .field-error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    color: var(--color-danger-proposed);
+    margin-top: var(--space-1);
+  }
+  .field-hint {
+    font-size: var(--font-size-sm);
+    color: var(--color-fg);
+    opacity: 0.7;
+    margin-top: var(--space-1);
+  }
+  .input.has-error {
+    border-color: var(--color-danger-proposed);
+  }
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-2) 0 0 0;
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+  }
+  .checklist li { display: flex; align-items: center; gap: var(--space-1); color: var(--color-fg); opacity: 0.8; }
+  .checklist li.met { color: var(--color-success-proposed); opacity: 1; font-weight: var(--font-weight-semibold); }
+  .checkbox-row { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
+  .checkbox-row input { width: 18px; height: 18px; }
+  .checkbox-row label { font-size: var(--font-size-md); }
+  .form-row-split { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
+
+  .btn-block { width: 100%; justify-content: center; }
+  .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+  .banner {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    border: 1px solid;
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    font-size: var(--font-size-md);
+    margin-bottom: var(--space-3);
+  }
+  .banner-error {
+    background: var(--color-danger-bg-proposed);
+    border-color: var(--color-danger-border-proposed);
+    color: var(--color-danger-proposed);
+  }
+  .banner-success {
+    background: var(--color-success-bg-proposed);
+    border-color: var(--color-success-border-proposed);
+    color: var(--color-success-proposed);
+  }
+  .banner-icon { font-size: var(--font-size-lg); line-height: 1; }
+  .banner-text strong { display: block; margin-bottom: 2px; }
+
+  .proto-shortcuts {
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-subtle);
+  }
+  .proto-shortcuts p {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-2);
+  }
+  .proto-shortcuts .shortcut-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .proto-shortcuts .btn-secondary {
+    font-size: var(--font-size-sm);
+    padding: var(--space-2) var(--space-3);
+  }
+  .proto-shortcuts .shortcut-hint {
+    font-size: var(--font-size-sm);
+    opacity: 0.65;
+    font-weight: var(--font-weight-regular);
+    margin-top: var(--space-2);
+  }
+  .demo-link {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: var(--font-size-sm);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    margin-top: var(--space-2);
+  }
+
+  /* ---- Authenticated app shell (Account Home) ---- */
+  .app-shell { display: flex; min-height: calc(100vh - 46px); }
+  .sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background: var(--color-bg);
+    border-right: 1px solid var(--color-border);
+    padding: var(--space-4) var(--space-2);
+  }
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-2);
+    margin-bottom: var(--space-4);
+    font-weight: var(--font-weight-semibold);
+  }
+  .sidebar-nav { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-1); }
+  .sidebar-link {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--space-2);
+    font-size: var(--font-size-md);
+    color: var(--color-fg);
+    cursor: pointer;
+  }
+  .sidebar-link.active {
+    background: var(--color-surface-subtle);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+  .app-main {
+    flex: 1;
+    padding: var(--space-4) calc(var(--space-4) * 1.5);
+    max-width: 880px;
+  }
+  .app-main h1 { font-size: calc(var(--font-size-lg) * 1.3); margin-bottom: var(--space-1); }
+  .app-main .page-sub { opacity: 0.7; margin-bottom: var(--space-4); }
+  .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); }
+  .status-row { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); }
+  .kv { display: grid; grid-template-columns: 120px 1fr; gap: var(--space-2); font-size: var(--font-size-md); margin-top: var(--space-2); }
+  .kv dt { opacity: 0.65; }
+  .kv dd { margin: 0; }
+  table.proto-table { width: 100%; border-collapse: collapse; font-size: var(--font-size-md); }
+  table.proto-table th, table.proto-table td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); }
+  table.proto-table th { font-size: var(--font-size-sm); opacity: 0.65; font-weight: var(--font-weight-semibold); }
+  .empty-state { text-align: center; padding: calc(var(--space-4) * 2) var(--space-4); color: var(--color-fg); opacity: 0.75; }
+
+  /* ---- Reviewer bar ---- */
+  #review-bar button {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    font-family: var(--font-sans, var(--font-family-base));
+    font-size: 13px;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Fixture data: existing accounts + password-reset/confirmation tokens -->
+<script id="fixtures" type="application/json">
+{
+  "accounts": [
+    {
+      "name": "Priya Shah",
+      "email": "priya.shah@example.com",
+      "password": "Str0ngPass1",
+      "dob": "1990-04-12",
+      "verified": true,
+      "failedAttempts": 0,
+      "lockUntil": null
+    },
+    {
+      "name": "Devon Price",
+      "email": "devon.price@example.com",
+      "password": "Secur3Pass",
+      "dob": "2003-02-01",
+      "verified": false,
+      "failedAttempts": 0,
+      "lockUntil": null
+    },
+    {
+      "name": "Sam Castillo",
+      "email": "locked.demo@example.com",
+      "password": "Unlock3dPw",
+      "dob": "1995-09-09",
+      "verified": true,
+      "failedAttempts": 4,
+      "lockUntil": null
+    },
+    {
+      "name": "Morgan Blake",
+      "email": "alreadylocked@example.com",
+      "password": "Tries2Many",
+      "dob": "1988-11-23",
+      "verified": true,
+      "failedAttempts": 5,
+      "lockUntil": "ACTIVE_LOCK"
+    }
+  ]
+}
+</script>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--surface, var(--color-bg));border-bottom:1px solid var(--border, var(--color-border));font-size:13px;font-family:var(--font-sans, var(--font-family-base))">
+  <span style="font-family:var(--font-mono, monospace);color:var(--muted, var(--color-fg))">ONBOARDING-TEST-MANOJ-STORY-011</span>
+  <button id="prev-btn">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--fg, var(--color-fg))"></span>
+  <button id="next-btn">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<div id="screens">
+
+<!-- Screen: Register
+     Notes:
+       - One continuous form; inline, field-level errors replace one another as the
+         user fixes input (AC3/4, AC5/6, AC7/8, AC9/10, AC30/31).
+       - Live password checklist updates as the user types (8+ chars, uppercase,
+         lowercase, number) so complexity is clear before submit (AC5/6).
+       - "Create account" disables + relabels to "Creating account…" during the
+         simulated 300ms submit, then either re-shows the form with an inline error,
+         or replaces it with the success panel (AC1/2).
+       - Prototype shortcuts below the form prefill each scenario; reviewer still
+         clicks "Create account" to see the real validation run.
+-->
+<div class="screen" data-name="Register">
+  <div class="auth-shell">
+    <div class="auth-brand"><span class="auth-brand-mark">C</span> Connectly</div>
+
+    <!-- State: form (default + all inline validation outcomes) -->
+    <div id="register-form-panel" class="card auth-card">
+      <h2 class="card-title">Create your account</h2>
+      <p class="auth-subtitle">This is a standalone demo account system — it is not affiliated with or connected to facebook.com.</p>
+
+      <form id="register-form" novalidate>
+        <div class="field">
+          <label class="label" for="reg-name">Full name</label>
+          <input class="input" type="text" id="reg-name" name="name" autocomplete="name">
+          <div class="field-error hidden" id="err-name"><span>⚠</span><span></span></div>
+        </div>
+        <div class="field">
+          <label class="label" for="reg-email">Email address</label>
+          <input class="input" type="text" id="reg-email" name="email" autocomplete="email">
+          <div class="field-error hidden" id="err-email"><span>⚠</span><span></span></div>
+        </div>
+        <div class="field">
+          <label class="label" for="reg-password">Password</label>
+          <input class="input" type="password" id="reg-password" name="password" autocomplete="new-password">
+          <ul class="checklist" id="reg-password-checklist" aria-live="polite">
+            <li id="chk-len">○ At least 8 characters</li>
+            <li id="chk-upper">○ One uppercase letter</li>
+            <li id="chk-lower">○ One lowercase letter</li>
+            <li id="chk-number">○ One number</li>
+          </ul>
+          <div class="field-error hidden" id="err-password"><span>⚠</span><span></span></div>
+        </div>
+        <div class="field">
+          <label class="label" for="reg-dob">Date of birth</label>
+          <input class="input" type="date" id="reg-dob" name="dob">
+          <div class="field-hint">You must be 13 or older to register.</div>
+          <div class="field-error hidden" id="err-dob"><span>⚠</span><span></span></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="register-submit">Create account</button>
+      </form>
+
+      <div class="auth-switch">Already have an account? <button class="link-button" onclick="goTo('Log In')">Log in</button></div>
+
+      <div class="proto-shortcuts">
+        <p>Prototype shortcuts — prefill a scenario, then click "Create account":</p>
+        <div class="shortcut-row">
+          <button class="btn btn-secondary" onclick="fillRegister('valid')">Valid new signup</button>
+          <button class="btn btn-secondary" onclick="fillRegister('missing')">Missing fields</button>
+          <button class="btn btn-secondary" onclick="fillRegister('badEmail')">Malformed email</button>
+          <button class="btn btn-secondary" onclick="fillRegister('weakPassword')">Weak password</button>
+          <button class="btn btn-secondary" onclick="fillRegister('duplicate')">Duplicate email</button>
+          <button class="btn btn-secondary" onclick="fillRegister('underage')">Under 13</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- State: success -->
+    <div id="register-success-panel" class="card auth-card hidden">
+      <div class="banner banner-success" style="margin-bottom:var(--space-3)">
+        <span class="banner-icon">✓</span>
+        <div class="banner-text"><strong>Account created</strong>Welcome to Connectly, <span id="success-name"></span>.</div>
+      </div>
+      <p class="card-body">We've sent a confirmation link to <strong id="success-email"></strong>. You'll need to confirm your email before you can log in.</p>
+      <button class="btn btn-primary btn-block" style="margin-top:var(--space-4)" onclick="goTo('Verify Email')">Continue</button>
+    </div>
+
+    <p class="auth-footnote">Connectly is a standalone prototype built for this story's registration &amp; login flow. No data leaves this page and no calls are made to any real service.</p>
+  </div>
+</div>
+
+<!-- Screen: Verify Email
+     Notes:
+       - Shown immediately after registration succeeds (AC2). The account cannot
+         log in yet (see Log In screen's "unverified" state, AC11/12).
+       - "Resend confirmation email" simulates a new send with a fresh 24-hour
+         window (supports AC15's resend path).
+       - Prototype shortcuts simulate opening the emailed link in either state,
+         since a real email can't be delivered in a static prototype.
+-->
+<div class="screen" data-name="Verify Email">
+  <div class="auth-shell">
+    <div class="auth-brand"><span class="auth-brand-mark">C</span> Connectly</div>
+
+    <!-- State: pending -->
+    <div id="verify-pending-panel" class="card auth-card">
+      <h2 class="card-title">Confirm your email</h2>
+      <p class="card-body">We've sent a confirmation link to <strong id="verify-email-address">your email</strong>. Click the link to activate your account — it expires in 24 hours.</p>
+      <button class="btn btn-secondary btn-block" style="margin-top:var(--space-4)" onclick="resendConfirmation()">Resend confirmation email</button>
+      <div id="verify-resent-note" class="banner banner-success hidden" style="margin-top:var(--space-3)">
+        <span class="banner-icon">✓</span>
+        <div class="banner-text">A new confirmation link has been sent.</div>
+      </div>
+
+      <div class="proto-shortcuts">
+        <p>Prototype shortcuts — simulate opening the emailed link:</p>
+        <div class="shortcut-row">
+          <button class="btn btn-secondary" onclick="openConfirmationLink('valid')">Open link (valid)</button>
+          <button class="btn btn-secondary" onclick="openConfirmationLink('expired')">Open link (24h+ old)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Screen: Email Confirmation
+     Notes:
+       - Reached only via the "open the emailed link" shortcuts on the previous
+         screen, mirroring a user clicking the real link in their inbox.
+       - "verified": confirms the account and unblocks login (AC13/14).
+       - "expired": explains the link's 24-hour window and offers a one-click
+         resend to the same address (AC15), looping back to a sent confirmation.
+-->
+<div class="screen" data-name="Email Confirmation">
+  <div class="auth-shell">
+    <div class="auth-brand"><span class="auth-brand-mark">C</span> Connectly</div>
+
+    <!-- State: verified -->
+    <div id="confirm-verified-panel" class="card auth-card hidden">
+      <div class="banner banner-success">
+        <span class="banner-icon">✓</span>
+        <div class="banner-text"><strong>Email verified</strong>Your account is confirmed and ready to use.</div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:var(--space-4)" onclick="goTo('Log In')">Log in</button>
+    </div>
+
+    <!-- State: expired -->
+    <div id="confirm-expired-panel" class="card auth-card hidden">
+      <div class="banner banner-error">
+        <span class="banner-icon">⚠</span>
+        <div class="banner-text"><strong>This link has expired</strong>Confirmation links are only valid for 24 hours.</div>
+      </div>
+      <p class="card-body">Request a new link and we'll send it to <strong id="confirm-expired-email"></strong>.</p>
+      <button class="btn btn-primary btn-block" style="margin-top:var(--space-3)" onclick="resendFromExpired()">Resend confirmation email</button>
+      <div id="confirm-expired-resent" class="banner banner-success hidden" style="margin-top:var(--space-3)">
+        <span class="banner-icon">✓</span>
+        <div class="banner-text">A new confirmation link has been sent. Check your inbox.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Screen: Log In
+     Notes:
+       - One alert banner area above the form covers all rejection states:
+         invalid credentials (AC18/19), unverified email (AC11/12), 5th
+         consecutive failure triggering a 15-minute lock (AC36/37), and an
+         attempt made while already locked (AC38/39).
+       - Failed-attempt counts and lock state live only in this tab's memory
+         (fixtures), reset on reload — adequate for demonstrating the behaviour.
+       - "Remember me" is read at submit time and carried into Account Home's
+         session chip and logout behaviour (AC20–22, AC29, AC32–35).
+-->
+<div class="screen" data-name="Log In">
+  <div class="auth-shell">
+    <div class="auth-brand"><span class="auth-brand-mark">C</span> Connectly</div>
+
+    <div class="card auth-card">
+      <h2 class="card-title">Log in</h2>
+      <p class="auth-subtitle">Welcome back to Connectly.</p>
+
+      <div id="login-banner"></div>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label class="label" for="login-email">Email address</label>
+          <input class="input" type="text" id="login-email" name="email" autocomplete="email">
+        </div>
+        <div class="field">
+          <label class="label" for="login-password">Password</label>
+          <input class="input" type="password" id="login-password" name="password" autocomplete="current-password">
+        </div>
+        <div class="form-row-split">
+          <div class="checkbox-row" style="margin-bottom:0">
+            <input type="checkbox" id="login-remember">
+            <label for="login-remember">Remember me for 30 days</label>
+          </div>
+          <button type="button" class="link-button" onclick="goTo('Forgot Password')">Forgot password?</button>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="login-submit">Log in</button>
+      </form>
+
+      <div class="auth-switch">New to Connectly? <button class="link-button" onclick="goTo('Register')">Create an account</button></div>
+
+      <div class="proto-shortcuts">
+        <p>Prototype shortcuts — prefill a scenario, then click "Log in":</p>
+        <div class="shortcut-row">
+          <button class="btn btn-secondary" onclick="fillLogin('valid')">Verified account</button>
+          <button class="btn btn-secondary" onclick="fillLogin('unverified')">Unverified account</button>
+          <button class="btn btn-secondary" onclick="fillLogin('wrongPassword')">Wrong password (5th attempt)</button>
+          <button class="btn btn-secondary" onclick="fillLogin('locked')">Already-locked account</button>
+        </div>
+        <p class="shortcut-hint">"Wrong password" account already has 4 failed attempts recorded — one more locks it for 15 minutes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Screen: Forgot Password
+     Notes:
+       - Submitting always shows the same generic message, regardless of whether
+         the email is registered (AC23, AC28) — this prevents account enumeration.
+       - Prototype shortcuts jump straight to the Reset Password screen in either
+         state, standing in for clicking the emailed link.
+-->
+<div class="screen" data-name="Forgot Password">
+  <div class="auth-shell">
+    <div class="auth-brand"><span class="auth-brand-mark">C</span> Connectly</div>
+
+    <!-- State: form -->
+    <div id="forgot-form-panel" class="card auth-card">
+      <h2 class="card-title">Reset your password</h2>
+      <p class="auth-subtitle">Enter your email and we'll send a link to reset your password.</p>
+      <form id="forgot-form" novalidate>
+        <div class="field">
+          <label class="label" for="forgot-email">Email address</label>
+          <input class="input" type="text" id="forgot-email" name="email" autocomplete="email">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send reset link</button>
+      </form>
+      <div class="auth-switch"><button class="link-button" onclick="goTo('Log In')">Back to log in</button></div>
+    </div>
+
+    <!-- State: sent -->
+    <div id="forgot-sent-panel" class="card auth-card hidden">
+      <div class="banner banner-success">
+        <span class="banner-icon">✓</span>
+        <div class="banner-text"><strong>Check your inbox</strong>If an account exists for <span id="forgot-sent-email"></span>, a password reset link has been sent.</div>
+      </div>
+      <button class="btn btn-secondary btn-block" style="margin-top:var(--space-4)" onclick="showForgotForm()">Try a different email</button>
+    </div>
+
+    <div class="proto-shortcuts">
+      <p>Prototype shortcuts — simulate opening the emailed reset link:</p>
+      <div class="shortcut-row">
+        <button class="btn btn-secondary" onclick="openResetLink('valid')">Open reset link (valid)</button>
+        <button class="btn btn-secondary" onclick="openResetLink('expired')">Open reset link (1h+ old)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Screen: Reset Password
+     Notes:
+       - "valid": new password must meet the same complexity rules as
+         registration (AC24); on success moves to the confirmation state (AC25).
+       - "expired": the link is older than 1 hour; offers a one-click request for
+         a new one, re-using the generic Forgot Password confirmation (AC26).
+-->
+<div class="screen" data-name="Reset Password">
+  <div class="auth-shell">
+    <div class="auth-brand"><span class="auth-brand-mark">C</span> Connectly</div>
+
+    <!-- State: valid form -->
+    <div id="reset-form-panel" class="card auth-card hidden">
+      <h2 class="card-title">Choose a new password</h2>
+      <p class="auth-subtitle">Resetting the password for <strong id="reset-email-address"></strong>.</p>
+      <form id="reset-form" novalidate>
+        <div class="field">
+          <label class="label" for="reset-password">New password</label>
+          <input class="input" type="password" id="reset-password" autocomplete="new-password">
+          <ul class="checklist" id="reset-password-checklist" aria-live="polite">
+            <li id="r-chk-len">○ At least 8 characters</li>
+            <li id="r-chk-upper">○ One uppercase letter</li>
+            <li id="r-chk-lower">○ One lowercase letter</li>
+            <li id="r-chk-number">○ One number</li>
+          </ul>
+          <div class="field-error hidden" id="err-reset-password"><span>⚠</span><span></span></div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Update password</button>
+      </form>
+    </div>
+
+    <!-- State: updated -->
+    <div id="reset-updated-panel" class="card auth-card hidden">
+      <div class="banner banner-success">
+        <span class="banner-icon">✓</span>
+        <div class="banner-text"><strong>Password updated</strong>You can now log in with your new password.</div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:var(--space-4)" onclick="goTo('Log In')">Log in</button>
+    </div>
+
+    <!-- State: expired -->
+    <div id="reset-expired-panel" class="card auth-card hidden">
+      <div class="banner banner-error">
+        <span class="banner-icon">⚠</span>
+        <div class="banner-text"><strong>This link has expired</strong>Password reset links are only valid for 1 hour.</div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:var(--space-3)" onclick="requestNewResetLink()">Request a new reset link</button>
+      <div id="reset-expired-sent" class="banner banner-success hidden" style="margin-top:var(--space-3)">
+        <span class="banner-icon">✓</span>
+        <div class="banner-text">If an account exists for this email, a new reset link has been sent.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Screen: Session Expired
+     Notes:
+       - "inactivity": no "remember me" session, 30 minutes idle (AC20/21).
+       - "remember-expired": a "remember me" session that reached its 30-day
+         limit, surfaced the next time the user tries an authenticated action
+         (AC29). Both states redirect back to the login form.
+-->
+<div class="screen" data-name="Session Expired">
+  <div class="auth-shell">
+    <div class="auth-brand"><span class="auth-brand-mark">C</span> Connectly</div>
+
+    <!-- State: inactivity -->
+    <div id="session-inactivity-panel" class="card auth-card hidden">
+      <div class="banner banner-error">
+        <span class="banner-icon">⚠</span>
+        <div class="banner-text"><strong>Your session has ended</strong>You were signed out after 30 minutes of inactivity.</div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:var(--space-3)" onclick="goTo('Log In')">Log in again</button>
+    </div>
+
+    <!-- State: remember-expired -->
+    <div id="session-remember-panel" class="card auth-card hidden">
+      <div class="banner banner-error">
+        <span class="banner-icon">⚠</span>
+        <div class="banner-text"><strong>Your saved sign-in has expired</strong>It's been 30 days since you last logged in, so you'll need to sign in again.</div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:var(--space-3)" onclick="goTo('Log In')">Log in again</button>
+    </div>
+  </div>
+</div>
+
+<!-- Screen: Account Home
+     Notes:
+       - Only authenticated screen; uses the project's standard left sidebar
+         (Dashboard · Records · Settings), switched client-side within this one
+         screen rather than via the reviewer bar (AC16/17 land here after login).
+       - Session card reflects the "remember me" choice made at login (AC22).
+       - Logout branches on "remember me": with it on, logout invalidates both
+         the session and the persistent token and says so explicitly (AC32/33);
+         without it, logout is immediate with a plain redirect (AC34/35).
+       - Records/Settings are minimal stand-ins so the sidebar nav stays
+         consistent across the app, per this project's UI guidelines; they are
+         not otherwise in scope for this story.
+-->
+<div class="screen" data-name="Account Home">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><span class="auth-brand-mark">C</span> Connectly</div>
+      <ul class="sidebar-nav">
+        <li><button class="sidebar-link active" id="nav-dashboard" onclick="showAccountSection('dashboard')">Dashboard</button></li>
+        <li><button class="sidebar-link" id="nav-records" onclick="showAccountSection('records')">Records</button></li>
+        <li><button class="sidebar-link" id="nav-settings" onclick="showAccountSection('settings')">Settings</button></li>
+      </ul>
+    </aside>
+
+    <main class="app-main">
+      <!-- State: Dashboard view -->
+      <section id="account-section-dashboard">
+        <h1>Welcome back, <span id="home-name">there</span></h1>
+        <p class="page-sub">You're logged in to Connectly.</p>
+
+        <div class="home-grid">
+          <div class="card">
+            <h3 class="card-title">Your account</h3>
+            <dl class="kv">
+              <dt>Name</dt><dd id="home-kv-name"></dd>
+              <dt>Email</dt><dd id="home-kv-email"></dd>
+              <dt>Status</dt><dd><span class="chip">Verified</span></dd>
+            </dl>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Session</h3>
+            <div class="status-row"><span class="chip" id="home-session-chip">Standard session</span></div>
+            <p class="card-body" id="home-session-detail" style="margin-top:var(--space-2)"></p>
+            <button class="btn btn-primary" style="margin-top:var(--space-3)" id="logout-btn" onclick="logout()">Log out</button>
+          </div>
+        </div>
+
+        <div class="proto-shortcuts">
+          <p>Prototype shortcuts — simulate session expiry:</p>
+          <div class="shortcut-row">
+            <button class="btn btn-secondary" onclick="simulateSessionEnd('inactivity')">Simulate 30 min of inactivity</button>
+            <button class="btn btn-secondary" onclick="simulateSessionEnd('remember')">Simulate 30-day "remember me" expiry</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- State: Records view -->
+      <section id="account-section-records" class="hidden">
+        <h1>Records</h1>
+        <p class="page-sub">Out of scope for this story — shown only to keep sidebar navigation consistent.</p>
+        <div class="card">
+          <table class="proto-table">
+            <thead><tr><th>Record</th><th>Updated</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="empty-state">No records match this filter yet.</div>
+        </div>
+      </section>
+
+      <!-- State: Settings view -->
+      <section id="account-section-settings" class="hidden">
+        <h1>Settings</h1>
+        <p class="page-sub">Manage your account details.</p>
+        <div class="card">
+          <h3 class="card-title">Profile</h3>
+          <dl class="kv">
+            <dt>Name</dt><dd id="settings-kv-name"></dd>
+            <dt>Email</dt><dd id="settings-kv-email"></dd>
+          </dl>
+          <button class="btn btn-secondary" style="margin-top:var(--space-3)" onclick="goTo('Forgot Password')">Change password</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function () {
+  const fixtures = JSON.parse(document.getElementById('fixtures').textContent);
+  // Clone so in-session mutations (failed attempts, new signups) don't touch the raw fixture.
+  const accounts = fixtures.accounts.map(a => Object.assign({}, a));
+  const FIFTEEN_MIN_MS = 15 * 60 * 1000;
+
+  function findAccount(email) {
+    return accounts.find(a => a.email.toLowerCase() === String(email || '').toLowerCase());
+  }
+
+  // ---------- Reviewer bar / screen switching ----------
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  let cur = 0;
+  function show(i) {
+    cur = Math.max(0, Math.min(screens.length - 1, i));
+    screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+    document.getElementById('screen-label').textContent =
+      `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  }
+  function goTo(name) {
+    const i = screens.findIndex(s => s.dataset.name === name);
+    if (i >= 0) show(i);
+  }
+  document.getElementById('prev-btn').onclick = () => show(cur - 1);
+  document.getElementById('next-btn').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => {
+    const tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) return;
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+  window.goTo = goTo;
+
+  function wait(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+  // ---------- Shared validation helpers ----------
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function passwordChecks(pw) {
+    pw = pw || '';
+    return {
+      len: pw.length >= 8,
+      upper: /[A-Z]/.test(pw),
+      lower: /[a-z]/.test(pw),
+      number: /\d/.test(pw)
+    };
+  }
+  function passwordValid(pw) {
+    const c = passwordChecks(pw);
+    return c.len && c.upper && c.lower && c.number;
+  }
+  function ageFromDob(dobStr) {
+    const dob = new Date(dobStr + 'T00:00:00');
+    const now = new Date();
+    let age = now.getFullYear() - dob.getFullYear();
+    const hasHadBirthdayThisYear =
+      (now.getMonth() > dob.getMonth()) ||
+      (now.getMonth() === dob.getMonth() && now.getDate() >= dob.getDate());
+    if (!hasHadBirthdayThisYear) age -= 1;
+    return age;
+  }
+
+  function setFieldError(errId, message) {
+    const el = document.getElementById(errId);
+    const input = document.getElementById(errId.replace('err-', 'reg-'));
+    el.querySelector('span:last-child').textContent = message;
+    el.classList.toggle('hidden', !message);
+    if (input) {
+      input.classList.toggle('has-error', !!message);
+      input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    }
+  }
+  function clearFieldErrors(ids) {
+    ids.forEach(errId => {
+      const el = document.getElementById(errId);
+      const input = document.getElementById(errId.replace('err-', 'reg-'));
+      el.classList.add('hidden');
+      el.querySelector('span:last-child').textContent = '';
+      if (input) { input.classList.remove('has-error'); input.removeAttribute('aria-invalid'); }
+    });
+  }
+
+  function updateChecklist(prefix, pw) {
+    const c = passwordChecks(pw);
+    const map = { len: 'At least 8 characters', upper: 'One uppercase letter', lower: 'One lowercase letter', number: 'One number' };
+    Object.keys(map).forEach(key => {
+      const li = document.getElementById(`${prefix}-chk-${key}`);
+      const met = c[key];
+      li.textContent = (met ? '✓ ' : '○ ') + map[key];
+      li.classList.toggle('met', met);
+    });
+  }
+
+  // ---------- Register screen ----------
+  const regFields = ['reg-name', 'reg-email', 'reg-password', 'reg-dob'];
+  const regErrIds = ['err-name', 'err-email', 'err-password', 'err-dob'];
+
+  document.getElementById('reg-password').addEventListener('input', e => updateChecklist('chk', e.target.value));
+
+  const registerScenarios = {
+    valid: { name: 'Jordan Lee', email: `new.user.${Date.now()}@example.com`, password: 'Fresh2Start', dob: '1998-06-15' },
+    missing: { name: '', email: 'missing.fields@example.com', password: '', dob: '' },
+    badEmail: { name: 'Alex Rivera', email: 'alex.rivera[at]example.com', password: 'Fresh2Start1', dob: '1996-01-01' },
+    weakPassword: { name: 'Casey Nguyen', email: 'casey.nguyen@example.com', password: 'weakpass', dob: '1992-03-03' },
+    duplicate: { name: 'Priya Shah', email: 'priya.shah@example.com', password: 'Fresh2Start1', dob: '1990-04-12' },
+    underage: { name: 'Riley Young', email: 'riley.young@example.com', password: 'Fresh2Start1', dob: String(new Date().getFullYear() - 10) + '-01-01' }
+  };
+  function fillRegister(scenario) {
+    const s = registerScenarios[scenario];
+    document.getElementById('reg-name').value = s.name;
+    document.getElementById('reg-email').value = s.email;
+    document.getElementById('reg-password').value = s.password;
+    document.getElementById('reg-dob').value = s.dob;
+    updateChecklist('chk', s.password);
+    clearFieldErrors(regErrIds);
+  }
+  window.fillRegister = fillRegister;
+
+  document.getElementById('register-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearFieldErrors(regErrIds);
+
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const dob = document.getElementById('reg-dob').value;
+
+    const btn = document.getElementById('register-submit');
+    btn.disabled = true;
+    btn.textContent = 'Creating account…';
+    await wait(300);
+    btn.disabled = false;
+    btn.textContent = 'Create account';
+
+    let hasMissing = false;
+    if (!name) { setFieldError('err-name', 'Enter your name.'); hasMissing = true; }
+    if (!email) { setFieldError('err-email', 'Enter your email address.'); hasMissing = true; }
+    if (!password) { setFieldError('err-password', 'Enter a password.'); hasMissing = true; }
+    if (!dob) { setFieldError('err-dob', 'Enter your date of birth.'); hasMissing = true; }
+    if (hasMissing) return; // AC3 / AC4
+
+    if (!EMAIL_RE.test(email)) {
+      setFieldError('err-email', 'Enter a valid email address, like name@example.com.'); // AC30 / AC31
+      return;
+    }
+    if (!passwordValid(password)) {
+      setFieldError('err-password', 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, and a number.'); // AC5 / AC6
+      return;
+    }
+    if (ageFromDob(dob) < 13) {
+      setFieldError('err-dob', 'You must be at least 13 years old to create an account.'); // AC9 / AC10
+      return;
+    }
+    if (findAccount(email)) {
+      setFieldError('err-email', 'An account with this email already exists. Please log in or reset your password.'); // AC7 / AC8
+      return;
+    }
+
+    // AC1 / AC2: account created, verification pending.
+    accounts.push({ name, email, password, dob, verified: false, failedAttempts: 0, lockUntil: null });
+    document.getElementById('success-name').textContent = name;
+    document.getElementById('success-email').textContent = email;
+    document.getElementById('verify-email-address').textContent = email;
+    document.getElementById('confirm-expired-email').textContent = email;
+    document.getElementById('register-form-panel').classList.add('hidden');
+    document.getElementById('register-success-panel').classList.remove('hidden');
+  });
+
+  // ---------- Verify Email / Email Confirmation screens ----------
+  function resendConfirmation() {
+    const note = document.getElementById('verify-resent-note');
+    note.classList.remove('hidden');
+  }
+  window.resendConfirmation = resendConfirmation;
+
+  function openConfirmationLink(kind) {
+    goTo('Email Confirmation');
+    document.getElementById('confirm-verified-panel').classList.toggle('hidden', kind !== 'valid');
+    document.getElementById('confirm-expired-panel').classList.toggle('hidden', kind !== 'expired');
+    document.getElementById('confirm-expired-resent').classList.add('hidden');
+    if (kind === 'valid') {
+      const email = document.getElementById('verify-email-address').textContent;
+      const acct = findAccount(email);
+      if (acct) acct.verified = true; // AC13 / AC14
+    }
+  }
+  window.openConfirmationLink = openConfirmationLink;
+
+  function resendFromExpired() {
+    document.getElementById('confirm-expired-resent').classList.remove('hidden'); // AC15
+  }
+  window.resendFromExpired = resendFromExpired;
+
+  // ---------- Log In screen ----------
+  function renderLoginBanner(kind, extra) {
+    const el = document.getElementById('login-banner');
+    if (!kind) { el.innerHTML = ''; return; }
+    const messages = {
+      invalid: { icon: '⚠', title: 'Incorrect email or password', body: 'Check your details and try again.' },
+      unverified: { icon: '⚠', title: 'Verify your email to continue', body: 'We sent a confirmation link to your inbox. Confirm your email, then log in.' },
+      lockedNow: { icon: '⚠', title: 'Account temporarily locked', body: `Too many failed attempts. Try again at ${extra}.` },
+      lockedStill: { icon: '⚠', title: 'Account still locked', body: `This account is locked until ${extra}.` }
+    };
+    const m = messages[kind];
+    el.innerHTML = `<div class="banner banner-error"><span class="banner-icon">${m.icon}</span><div class="banner-text"><strong>${m.title}</strong>${m.body}</div></div>`;
+    if (kind === 'lockedStill') {
+      const btn = document.createElement('button');
+      btn.className = 'demo-link';
+      btn.textContent = 'Demo only: simulate the 15-minute lockout period elapsing';
+      btn.onclick = () => {
+        const acct = findAccount(document.getElementById('login-email').value);
+        if (acct) { acct.lockUntil = null; acct.failedAttempts = 0; }
+        renderLoginBanner(null);
+      };
+      el.appendChild(btn);
+    }
+  }
+
+  const loginScenarios = {
+    valid: { email: 'priya.shah@example.com', password: 'Str0ngPass1', remember: true },
+    unverified: { email: 'devon.price@example.com', password: 'Secur3Pass', remember: false },
+    wrongPassword: { email: 'locked.demo@example.com', password: 'WrongGuess1', remember: false },
+    locked: { email: 'alreadylocked@example.com', password: 'Tries2Many', remember: false }
+  };
+  function fillLogin(scenario) {
+    const s = loginScenarios[scenario];
+    document.getElementById('login-email').value = s.email;
+    document.getElementById('login-password').value = s.password;
+    document.getElementById('login-remember').checked = s.remember;
+    renderLoginBanner(null);
+  }
+  window.fillLogin = fillLogin;
+
+  let session = null; // { name, email, rememberMe }
+
+  document.getElementById('login-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const remember = document.getElementById('login-remember').checked;
+
+    const btn = document.getElementById('login-submit');
+    btn.disabled = true;
+    btn.textContent = 'Logging in…';
+    await wait(300);
+    btn.disabled = false;
+    btn.textContent = 'Log in';
+
+    const acct = findAccount(email);
+
+    if (acct && acct.lockUntil) {
+      const until = new Date(acct.lockUntil);
+      if (Date.now() < until.getTime()) {
+        renderLoginBanner('lockedStill', until.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })); // AC38 / AC39
+        return;
+      } else {
+        acct.lockUntil = null;
+        acct.failedAttempts = 0;
+      }
+    }
+
+    if (!acct || acct.password !== password) {
+      if (acct) {
+        acct.failedAttempts += 1;
+        if (acct.failedAttempts >= 5) {
+          const until = new Date(Date.now() + FIFTEEN_MIN_MS);
+          acct.lockUntil = until.toISOString();
+          renderLoginBanner('lockedNow', until.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })); // AC36 / AC37
+          return;
+        }
+      }
+      renderLoginBanner('invalid'); // AC18 / AC19
+      return;
+    }
+
+    if (!acct.verified) {
+      renderLoginBanner('unverified'); // AC11 / AC12
+      return;
+    }
+
+    acct.failedAttempts = 0;
+    acct.lockUntil = null;
+    renderLoginBanner(null);
+    session = { name: acct.name, email: acct.email, rememberMe: remember };
+    enterAccountHome(); // AC16 / AC17
+  });
+
+  function enterAccountHome() {
+    document.getElementById('home-name').textContent = session.name.split(' ')[0];
+    document.getElementById('home-kv-name').textContent = session.name;
+    document.getElementById('home-kv-email').textContent = session.email;
+    document.getElementById('settings-kv-name').textContent = session.name;
+    document.getElementById('settings-kv-email').textContent = session.email;
+    const chip = document.getElementById('home-session-chip');
+    const detail = document.getElementById('home-session-detail');
+    if (session.rememberMe) {
+      chip.textContent = 'Remember me active';
+      detail.textContent = 'You’ll stay logged in on this device for 30 days without re-entering your password.';
+    } else {
+      chip.textContent = 'Standard session';
+      detail.textContent = 'You’ll be logged out automatically after 30 minutes of inactivity.';
+    }
+    showAccountSection('dashboard');
+    goTo('Account Home');
+  }
+
+  // ---------- Forgot / Reset Password screens ----------
+  function showForgotForm() {
+    document.getElementById('forgot-form-panel').classList.remove('hidden');
+    document.getElementById('forgot-sent-panel').classList.add('hidden');
+  }
+  window.showForgotForm = showForgotForm;
+
+  document.getElementById('forgot-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const email = document.getElementById('forgot-email').value.trim() || 'that address';
+    await wait(250);
+    document.getElementById('forgot-sent-email').textContent = email;
+    document.getElementById('forgot-form-panel').classList.add('hidden');
+    document.getElementById('forgot-sent-panel').classList.remove('hidden'); // AC23 / AC28
+  });
+
+  function openResetLink(kind) {
+    goTo('Reset Password');
+    document.getElementById('reset-form-panel').classList.toggle('hidden', kind !== 'valid');
+    document.getElementById('reset-updated-panel').classList.add('hidden');
+    document.getElementById('reset-expired-panel').classList.toggle('hidden', kind !== 'expired');
+    document.getElementById('reset-expired-sent').classList.add('hidden');
+    document.getElementById('reset-email-address').textContent = 'priya.shah@example.com';
+    document.getElementById('reset-password').value = '';
+    updateChecklist('r-chk', '');
+  }
+  window.openResetLink = openResetLink;
+
+  document.getElementById('reset-password').addEventListener('input', e => updateChecklist('r-chk', e.target.value));
+
+  document.getElementById('reset-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const pw = document.getElementById('reset-password').value;
+    document.getElementById('err-reset-password').classList.add('hidden');
+    if (!passwordValid(pw)) {
+      document.getElementById('err-reset-password').classList.remove('hidden');
+      document.getElementById('err-reset-password').querySelector('span:last-child').textContent =
+        'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, and a number.';
+      return;
+    }
+    const acct = findAccount(document.getElementById('reset-email-address').textContent);
+    if (acct) acct.password = pw; // AC24
+    document.getElementById('reset-form-panel').classList.add('hidden');
+    document.getElementById('reset-updated-panel').classList.remove('hidden'); // AC25
+  });
+
+  function requestNewResetLink() {
+    document.getElementById('reset-expired-sent').classList.remove('hidden'); // AC26
+  }
+  window.requestNewResetLink = requestNewResetLink;
+
+  // ---------- Session expiry + logout (Account Home) ----------
+  function simulateSessionEnd(kind) {
+    document.getElementById('session-inactivity-panel').classList.toggle('hidden', kind !== 'inactivity');
+    document.getElementById('session-remember-panel').classList.toggle('hidden', kind !== 'remember');
+    goTo('Session Expired'); // AC20/21 or AC29
+    session = null;
+  }
+  window.simulateSessionEnd = simulateSessionEnd;
+
+  async function logout() {
+    const btn = document.getElementById('logout-btn');
+    btn.disabled = true;
+    btn.textContent = 'Logging out…';
+    await wait(250);
+    btn.disabled = false;
+    btn.textContent = 'Log out';
+    const wasRemembered = session && session.rememberMe;
+    session = null;
+    goTo('Log In');
+    document.getElementById('login-form').reset();
+    if (wasRemembered) {
+      renderLoginBannerInfo('You’ve been logged out, and your saved sign-in has been removed from this device. Log in again to continue.'); // AC32/33
+    } else {
+      renderLoginBannerInfo('You’ve been logged out.'); // AC34/35
+    }
+  }
+  window.logout = logout;
+
+  function renderLoginBannerInfo(text) {
+    document.getElementById('login-banner').innerHTML =
+      `<div class="banner banner-success"><span class="banner-icon">✓</span><div class="banner-text">${text}</div></div>`;
+  }
+
+  function showAccountSection(section) {
+    ['dashboard', 'records', 'settings'].forEach(s => {
+      document.getElementById('account-section-' + s).classList.toggle('hidden', s !== section);
+      document.getElementById('nav-' + s).classList.toggle('active', s === section);
+    });
+  }
+  window.showAccountSection = showAccountSection;
+
+  show(0);
+})();
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->

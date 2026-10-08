@@ -8,6 +8,12 @@
   --color-primary: #2563eb; /** Brand accent used for primary actions and focus states. */
   --color-border: #d1d5db; /** Default hairline border for cards, inputs, and dividers. */
   --color-surface-subtle: #eef2ff; /** Low-emphasis tinted background, e.g. chips and secondary buttons on hover. */
+  --color-danger: #b91c1c; /** Error text, borders, and icons. */
+  --color-danger-bg: #fef2f2; /** Error banner background. */
+  --color-danger-border: #fecaca; /** Error banner border. */
+  --color-success: #15803d; /** Success text and icons. */
+  --color-success-bg: #f0fdf4; /** Success banner background. */
+  --color-success-border: #bbf7d0; /** Success banner border. */
   --space-1: 4px; /** Tightest spacing: icon-to-label gaps, chip padding. */
   --space-2: 8px; /** Compact spacing: control internal padding, stack gaps in dense lists. */
   --space-3: 12px; /** Default spacing: button padding, form field gaps. */
