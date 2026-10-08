@@ -1,0 +1,12 @@
+@import '../../../design-system/tokens.css';
+@import '../../../design-system/prototype-utils.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+}
