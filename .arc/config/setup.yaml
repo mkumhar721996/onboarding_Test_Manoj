@@ -1,5 +1,6 @@
 package_install_commands:
   npm: npm install {name}@{version}
+  pnpm: pnpm add {name}@{version}
 components:
   comp_hr_api:
     mode: local
@@ -21,3 +22,6 @@ commands:
     test:e2e)
   build: (pnpm -C services/hr-api run build) && (pnpm -C services/notification-worker
     run build) && (pnpm -C apps/web run build)
+setup_command: (cd apps/web && pnpm install --frozen-lockfile) && (cd services/hr-api
+  && pnpm install --frozen-lockfile) && (cd services/notification-worker && pnpm install
+  --frozen-lockfile)
