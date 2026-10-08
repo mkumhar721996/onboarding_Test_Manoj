@@ -1,0 +1,22 @@
+{
+  "name": "@hrms/notification-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sends email notifications and approval messages triggered by HR workflows (leave approvals, recruitment updates, onboarding reminders) via a Redis-backed job queue (comp_notification_worker).",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run test/unit"
+  },
+  "dependencies": {
+    "bullmq": "^5.28.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3"
+  }
+}

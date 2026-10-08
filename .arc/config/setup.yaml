@@ -5,6 +5,12 @@ components:
     mode: local
     test_command: pnpm -C services/hr-api test && pnpm -C services/hr-api test:e2e
     build_command: pnpm -C services/hr-api run build
+  comp_notification_worker:
+    mode: local
+    test_command: pnpm -C services/notification-worker test
+    build_command: pnpm -C services/notification-worker run build
 commands:
-  test: pnpm -C services/hr-api test && pnpm -C services/hr-api test:e2e
-  build: pnpm -C services/hr-api run build
+  test: (pnpm -C services/hr-api test && pnpm -C services/hr-api test:e2e) && (pnpm
+    -C services/notification-worker test)
+  build: (pnpm -C services/hr-api run build) && (pnpm -C services/notification-worker
+    run build)
