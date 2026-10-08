@@ -1,2 +1,10 @@
 package_install_commands:
-  npm: "npm install {name}@{version}"
+  npm: npm install {name}@{version}
+components:
+  comp_hr_api:
+    mode: local
+    test_command: pnpm -C services/hr-api test && pnpm -C services/hr-api test:e2e
+    build_command: pnpm -C services/hr-api run build
+commands:
+  test: pnpm -C services/hr-api test && pnpm -C services/hr-api test:e2e
+  build: pnpm -C services/hr-api run build
